@@ -1,0 +1,6 @@
+{
+  "name": "Silvia Ateliê",
+  "description": "Aplicativo simples, acolhedor e organizado para papelaria personalizada: pedidos, clientes, produtos, modelos, estoque, custos e preços.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
