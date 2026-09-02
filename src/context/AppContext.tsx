@@ -108,6 +108,7 @@ interface AppContextType {
 
   addMaterial: (material: Omit<Material, 'id'>) => void;
   updateMaterial: (id: string, updates: Partial<Material>) => void;
+  updateMaterialStock: (id: string, newStock: number) => void;
   registerPurchase: (
     materialId: string,
     quantity: number,
@@ -136,33 +137,57 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Load state with fallback
   const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'orders');
-    return saved ? JSON.parse(saved) : initialOrders;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'orders');
+      return saved ? JSON.parse(saved) : initialOrders;
+    } catch {
+      return initialOrders;
+    }
   });
 
   const [clients, setClients] = useState<Client[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'clients');
-    return saved ? JSON.parse(saved) : initialClients;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'clients');
+      return saved ? JSON.parse(saved) : initialClients;
+    } catch {
+      return initialClients;
+    }
   });
 
   const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'products');
-    return saved ? JSON.parse(saved) : initialProducts;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'products');
+      return saved ? JSON.parse(saved) : initialProducts;
+    } catch {
+      return initialProducts;
+    }
   });
 
   const [models, setModels] = useState<ModelItem[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'models');
-    return saved ? JSON.parse(saved) : initialModels;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'models');
+      return saved ? JSON.parse(saved) : initialModels;
+    } catch {
+      return initialModels;
+    }
   });
 
   const [materials, setMaterials] = useState<Material[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'materials');
-    return saved ? JSON.parse(saved) : initialMaterials;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'materials');
+      return saved ? JSON.parse(saved) : initialMaterials;
+    } catch {
+      return initialMaterials;
+    }
   });
 
   const [settings, setSettings] = useState<AtelierSettings>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'settings');
-    return saved ? JSON.parse(saved) : initialSettings;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'settings');
+      return saved ? JSON.parse(saved) : initialSettings;
+    } catch {
+      return initialSettings;
+    }
   });
 
   // Modal states
@@ -389,6 +414,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Material atualizado!');
   };
 
+  const updateMaterialStock = (id: string, newStock: number) => {
+    setMaterials((prev) =>
+      prev.map((mat) =>
+        mat.id === id ? { ...mat, currentStock: Math.max(0, newStock) } : mat
+      )
+    );
+  };
+
   const registerPurchase = (
     materialId: string,
     quantity: number,
@@ -572,6 +605,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
         addMaterial,
         updateMaterial,
+        updateMaterialStock,
         registerPurchase,
 
         addModel,
